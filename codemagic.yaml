@@ -1,0 +1,28 @@
+workflows:
+  resnap-test:
+    name: Resnap test build
+    instance_type: linux_x2
+    max_build_duration: 30
+    environment:
+      flutter: stable
+    scripts:
+      - name: Unpack project
+        script: |
+          mkdir src
+          unzip -o resnap.zip -d src
+      - name: Create Android project
+        script: |
+          cd src
+          cp pubspec.yaml /tmp/pubspec.yaml
+          cp lib/main.dart /tmp/main.dart
+          flutter create --org com.resnapapps --project-name resnap --platforms=android .
+          cp /tmp/pubspec.yaml pubspec.yaml
+          cp /tmp/main.dart lib/main.dart
+          rm -rf test
+          flutter pub get
+      - name: Build APK
+        script: |
+          cd src
+          flutter build apk --release
+    artifacts:
+      - src/build/app/outputs/flutter-apk/*.apk
