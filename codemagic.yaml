@@ -20,6 +20,8 @@ workflows:
           cp /tmp/main.dart lib/main.dart
           rm -rf test
           flutter pub get
+          dart run flutter_launcher_icons
+          perl -pi -e 's/android:label="[^"]*"/android:label="Resnap"/' android/app/src/main/AndroidManifest.xml
       - name: Build APK
         script: |
           cd src
